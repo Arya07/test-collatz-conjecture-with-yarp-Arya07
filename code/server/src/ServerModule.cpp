@@ -54,22 +54,10 @@ public:
 
 				cout  "choosing an other pair (N,T).." <<endl;
 				int new_N = CNT;
-				int new_T = *(FIFO.begin());
+				int new_T = ()*(FIFO.begin()))-1;
 
 				cout  "eresing tested number"<< tested_N << "from the FIFO" <<endl;
-				std::list<int>::iterator it = FIFO.begin();
-				bool found = false;
-				while(!found && it != FIFO.end()){
-					if(*it == tested_N){
-						cout << "number"<<*it<< "tested. Eresing.." << endl;
-						FIFO.erase(it);
-						found = true;
-					}
-					it++;
-				}
-				if(!found){
-					cout << "number"<<tested_N<< "Not found in the FIFO..." << endl;
-				}
+				ereseTested(tested_N);
 
 				fifo_mutex.post();
 
@@ -115,6 +103,23 @@ public:
 
       return true;
     }
+
+		void ereseTested(int N){
+			std::list<int>::iterator it = FIFO.begin();
+			bool found = false;
+			while(!found && it != FIFO.end()){
+				if(*it == tested_N){
+					cout << "number"<<*it<< "tested. Eresing.." << endl;
+					FIFO.erase(it);
+					found = true;
+				}
+				it++;
+			}
+			if(!found){
+				cout << "number"<<tested_N<< "Not found in the FIFO..." << endl;
+			}
+
+		}
 };
 
   int main(int argc, char * argv[])
