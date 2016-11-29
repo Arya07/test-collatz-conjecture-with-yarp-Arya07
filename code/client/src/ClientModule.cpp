@@ -1,0 +1,104 @@
+/*
+ * author: Elisa Maiettini
+ * date: 26/11/2016
+ */
+#include <iostream>
+#include <iomanip>
+#include <yarp/os/Network.h>
+#include <yarp/os/RFModule.h>
+#include <yarp/os/RpcClient.h>
+#include <vocabs.hpp>
+#include <CollatzTester.hpp>
+
+#include <stdio.h>
+#include <string>
+
+using namespace std;
+using namespace yarp::os;
+class ClientModule : public RFModule
+{
+private:
+
+	RpcClient client_port;
+	int N;
+	int T;
+	Bottle request, response;
+
+
+public:
+    double getPeriod()  {        return 1.0;  }
+
+    virtual bool respond(const Bottle &command, Bottle &reply)
+  	{
+  		// if(manager_thr->execReq(command,reply))
+  		// 	return true;
+  		// else
+  		// 	return RFModule::respond(command,reply);
+      return true;
+  	}
+
+    virtual bool updateModule()
+  	{
+
+      request.addInt(COLLATZ_VOCAB_REQ_ITEM);
+      request.addInt(N);
+
+      cout << "client sending request.." << N << endl;
+  		client_port.write(request,response);
+
+      if(response.get(0) == COLLATZ_VOCAB_ITEM){
+        cout << "client elaborating server response.." << endl;
+        N = response.get(1).asInt();
+        T = response.get(2).asInt();
+  			CollatzTester::testPair(N, T);
+
+        cout << "client has tested int "<< N << "with threshold " << T <<"and is sending request.." << endl;
+
+      }
+      request.clear();
+      response.clear();
+
+  		return true;
+  	}
+
+
+    bool configure(yarp::os::ResourceFinder &rf)
+    {
+			N = 0;
+			T = 0;
+      string port_name = rf.find("name").asString().c_str();
+
+      client_port.open(("/"+port_name).c_str());
+      cout << "opened port: /" + port_name << endl;
+
+      return true;
+    }
+
+    bool interruptModule()
+    {
+      client_port.interrupt();
+      return true;
+    }
+
+    bool close()
+    {
+
+      client_port.close();
+
+      return true;
+    }
+};
+
+  int main(int argc, char * argv[])
+  {
+    Network yarp;
+    ClientModule module;
+    ResourceFinder rf;
+
+    rf.configure(argc, argv);
+    rf.setVerbose(true);
+
+    cout << "Configuring and starting module. \n";
+    module.runModule(rf);
+    return module.runModule(rf);
+  }

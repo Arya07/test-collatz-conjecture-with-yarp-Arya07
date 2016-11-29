@@ -1,0 +1,3 @@
+/home/elisa/assignements/test-collatz-conjecture-with-yarp-Arya07/code/client/build/CMakeFiles/rebuild_cache.dir
+/home/elisa/assignements/test-collatz-conjecture-with-yarp-Arya07/code/client/build/CMakeFiles/edit_cache.dir
+/home/elisa/assignements/test-collatz-conjecture-with-yarp-Arya07/code/client/build/CMakeFiles/client.dir
