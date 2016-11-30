@@ -5,5 +5,5 @@ INCLUDE_DIRECTORIES(
   include
 )
 
-add_executable(server src/ServerModule.cpp)
+add_executable(server src/ServerModule.cpp src/FIFOHandler.cpp)
 target_link_libraries(server ${YARP_LIBRARIES})

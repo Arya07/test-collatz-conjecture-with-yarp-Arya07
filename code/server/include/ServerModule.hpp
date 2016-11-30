@@ -10,23 +10,22 @@
 #include <yarp/os/Semaphore.h>
 
 #include <vocabs.hpp>
+#include <FIFOHandler.hpp>
 
 #include <stdio.h>
 #include <string>
 #include <ctime>
-#include <list>
+#include <vector>
 
 using namespace std;
 using namespace yarp::os;
-class ServerModule : public RFModule
-{
+
+class ServerModule : public RFModule{
 private:
 
 	RpcServer        server_port;
 	int              CNT;
-
-	std::list<int>   FIFO;
-	Semaphore        fifo_mutex;
+  FIFOHandler 	   *fifo_handler;
 
 public:
 
@@ -51,5 +50,4 @@ public:
 
   bool configure(yarp::os::ResourceFinder &rf);
 
-	std::list<int>::iterator getFIFO();
 };
