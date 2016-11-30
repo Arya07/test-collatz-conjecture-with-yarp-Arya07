@@ -7,14 +7,13 @@
 using namespace std;
 using namespace yarp::os;
 
-bool ServerModule::updateModule()
-{
+bool ServerModule::respond(const Bottle &command, Bottle &reply){
 	int tested_N;
 	cout << "ServerModule: waiting message from client.."<< endl;
-  server_port.read(in,true);
+	//server_port.read(command,true);
 
-	if(in.get(0).asInt()==COLLATZ_VOCAB_REQ_ITEM){
-		tested_N = in.get(1).asInt();
+	if(command.get(0).asInt()==COLLATZ_VOCAB_REQ_ITEM){
+		tested_N = command.get(1).asInt();
 		cout << "ServerModule: received message of tested number:" << tested_N << endl;
 
 		//updating CNT and FIFO
@@ -51,17 +50,28 @@ bool ServerModule::updateModule()
 
 		//prepering new bottle for the client
 		cout << "ServerModule: prepering bottle for the client.."<< endl;
-		out.addInt(COLLATZ_VOCAB_ITEM);
-		out.addInt(new_N);
-		out.addInt(new_T);
+		reply.addInt(COLLATZ_VOCAB_ITEM);
+		reply.addInt(new_N);
+		reply.addInt(new_T);
 
 		//sending response to the client
 		cout << "ServerModule: sending message to client.."<< endl;
-		server_port.reply(out);
+		//server_port.reply(reply);
 	}
 
 	in.clear();
-  out.clear();
+	out.clear();
+	return true;
+}
+
+bool ServerModule::updateModule(){
+	cout << "FIFOController: the current FIFO is: {";
+	std::list<int>::iterator it;
+	for(it = FIFO.begin(); it != FIFO.end() ; it++ ){
+		cout << *it << ", ";
+	}
+	cout << "}" << endl;
+
 	return true;
 }
 
@@ -69,10 +79,11 @@ bool ServerModule::updateModule()
 bool ServerModule::configure(yarp::os::ResourceFinder &rf)
 {
 	CNT = 1;
-  string port_name = rf.find("name").asString().c_str();
 
+  string port_name = rf.find("name").asString().c_str();
   server_port.open(("/"+port_name).c_str());
   cout << "ServerModule: opened port: /" + port_name << endl;
+	attach(server_port);
 
 	FIFO = std::list<int>();
 

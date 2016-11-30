@@ -36,9 +36,7 @@ public:
     return 1.0;
   }
 
-  virtual bool respond(const Bottle &command, Bottle &reply){
-    return true;
-  }
+  virtual bool respond(const Bottle &command, Bottle &reply);
 
   bool interruptModule(){
     server_port.interrupt();
