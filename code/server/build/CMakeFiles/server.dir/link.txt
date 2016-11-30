@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/server.dir/src/ServerModule.cpp.o  -o server -rdynamic /usr/local/lib/libYARP_math.so.2.3.66.1 /usr/local/lib/libYARP_dev.so.2.3.66.1 /usr/local/lib/libYARP_init.so.2.3.66.1 /usr/local/lib/libYARP_name.so.2.3.66.1 /usr/local/lib/libYARP_sig.so.2.3.66.1 /usr/local/lib/libYARP_OS.so.2.3.66.1 -Wl,-rpath,/usr/local/lib 
