@@ -15,7 +15,7 @@ bool ServerModule::updateModule()
 
 	if(in.get(0).asInt()==COLLATZ_VOCAB_REQ_ITEM){
 		tested_N = in.get(1).asInt();
-		cout << "ServerModule: received message of tested number: " << tested_N << endl;
+		cout << "ServerModule: received message of tested number:" << tested_N << endl;
 
 		//updating CNT and FIFO
 		cout << "ServerModule: updating CNT and FIFO" << endl;
