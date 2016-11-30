@@ -10,7 +10,6 @@ using namespace yarp::os;
 bool ServerModule::respond(const Bottle &command, Bottle &reply){
 	int tested_N;
 	cout << "ServerModule: waiting message from client.."<< endl;
-	//server_port.read(command,true);
 
 	if(command.get(0).asInt()==COLLATZ_VOCAB_REQ_ITEM){
 		tested_N = command.get(1).asInt();
@@ -25,7 +24,7 @@ bool ServerModule::respond(const Bottle &command, Bottle &reply){
 		//choosing an other pair (N,T)
 		cout << "ServerModule: choosing an other pair (N,T).." <<endl;
 		int new_N = CNT;
-		cout << "CNT: " << CNT <<endl;
+		cout << "CNT: " << CNT << " ";
 
 		std::list<int>::iterator it1 = FIFO.begin();
 		int new_T = ((*it1)-1);
@@ -43,38 +42,37 @@ bool ServerModule::respond(const Bottle &command, Bottle &reply){
 			it++;
 		}
 		if(!found){
-			cout << "ServerModule: number"<<tested_N<< "Not found in the FIFO..." << endl;
+			cout << "ServerModule: number "<<tested_N<< "Not found in the FIFO..." << endl;
 		}
 
 		fifo_mutex.post();
 
-		//prepering new bottle for the client
-		cout << "ServerModule: prepering bottle for the client.."<< endl;
+		//preparing new bottle for the client
+		cout << "ServerModule: preparing bottle for the client.."<< endl;
 		reply.addInt(COLLATZ_VOCAB_ITEM);
 		reply.addInt(new_N);
 		reply.addInt(new_T);
 
 		//sending response to the client
 		cout << "ServerModule: sending message to client.."<< endl;
-		//server_port.reply(reply);
 	}
-
-	in.clear();
-	out.clear();
 	return true;
 }
 
 bool ServerModule::updateModule(){
-	cout << "FIFOController: the current FIFO is: {";
+	fifo_mutex.wait();
+
+	cout << endl << "FIFOController: the current FIFO is: {";
 	std::list<int>::iterator it;
 	for(it = FIFO.begin(); it != FIFO.end() ; it++ ){
 		cout << *it << ", ";
 	}
-	cout << "}" << endl;
+	cout << "}" << endl << endl;
+
+	fifo_mutex.post();
 
 	return true;
 }
-
 
 bool ServerModule::configure(yarp::os::ResourceFinder &rf)
 {
@@ -98,7 +96,6 @@ std::list<int>::iterator ServerModule::getFIFO(){
 
 	return it;
 }
-
 
 int main(int argc, char * argv[])
 {

@@ -9,7 +9,6 @@
 #include <yarp/os/RpcServer.h>
 #include <yarp/os/Semaphore.h>
 
-//#include <FIFOController.hpp>
 #include <vocabs.hpp>
 
 #include <stdio.h>
@@ -24,7 +23,6 @@ class ServerModule : public RFModule
 private:
 
 	RpcServer        server_port;
-	Bottle           in, out;
 	int              CNT;
 
 	std::list<int>   FIFO;
@@ -36,8 +34,6 @@ public:
     return 1.0;
   }
 
-  virtual bool respond(const Bottle &command, Bottle &reply);
-
   bool interruptModule(){
     server_port.interrupt();
     return true;
@@ -48,9 +44,12 @@ public:
     return true;
   }
 
-    virtual bool updateModule();
+  virtual bool respond(const Bottle &command, Bottle &reply);
 
-    bool configure(yarp::os::ResourceFinder &rf);
 
-		std::list<int>::iterator getFIFO();
+  virtual bool updateModule();
+
+  bool configure(yarp::os::ResourceFinder &rf);
+
+	std::list<int>::iterator getFIFO();
 };
