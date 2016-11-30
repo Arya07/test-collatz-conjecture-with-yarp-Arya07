@@ -30,10 +30,6 @@ public:
 
     virtual bool respond(const Bottle &command, Bottle &reply)
   	{
-  		// if(manager_thr->execReq(command,reply))
-  		// 	return true;
-  		// else
-  		// 	return RFModule::respond(command,reply);
       return true;
   	}
 
@@ -43,16 +39,16 @@ public:
       request.addInt(COLLATZ_VOCAB_REQ_ITEM);
       request.addInt(N);
 
-      cout << "client sending request.." << N << endl;
+      cout << "ClientModule: client sending request.." << N << endl;
   		client_port.write(request,response);
 
-      if(response.get(0) == COLLATZ_VOCAB_ITEM){
-        cout << "client elaborating server response.." << endl;
+      if(response.get(0).asInt() == COLLATZ_VOCAB_ITEM){
+        cout << "ClientModule: client elaborating server response.." << endl;
         N = response.get(1).asInt();
         T = response.get(2).asInt();
   			CollatzTester::testPair(N, T);
 
-        cout << "client has tested int "<< N << "with threshold " << T <<"and is sending request.." << endl;
+        cout << "ClientModule: client has tested int "<< N << "with threshold " << T <<"and is sending request.." << endl;
 
       }
       request.clear();
@@ -69,7 +65,7 @@ public:
       string port_name = rf.find("name").asString().c_str();
 
       client_port.open(("/"+port_name).c_str());
-      cout << "opened port: /" + port_name << endl;
+      cout << "ClientModule: opened port: /" + port_name << endl;
 
       return true;
     }
@@ -98,7 +94,7 @@ public:
     rf.configure(argc, argv);
     rf.setVerbose(true);
 
-    cout << "Configuring and starting module. \n";
+    cout << "ClientModule: Configuring and starting module. \n";
     module.runModule(rf);
     return module.runModule(rf);
   }

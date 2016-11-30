@@ -2,138 +2,105 @@
  * author: Elisa Maiettini
  * date: 26/11/2016
  */
-#include <iostream>
-#include <iomanip>
-#include <yarp/os/Network.h>
-#include <yarp/os/RFModule.h>
-#include <yarp/os/RpcServer.h>
-#include <yarp/os/RateThread.h>
-
-#include <vocabs.hpp>
-
-#include <stdio.h>
-#include <string>
-#include <ctime>
-#include <list>
-
+#include<ServerModule.hpp>
 
 using namespace std;
 using namespace yarp::os;
-class ServerModule : public RFModule
+
+bool ServerModule::updateModule()
 {
-private:
+	int tested_N;
+	cout << "ServerModule: waiting message from client.."<< endl;
+  server_port.read(in,true);
 
-	RpcServer server_port;
-	RateThread fifo_controller;
-	std::list<int> FIFO;
-	Semaphore fifo_mutex;
-	int CNT;
-	Bottle in, out;
+	if(in.get(0).asInt()==COLLATZ_VOCAB_REQ_ITEM){
+		tested_N = in.get(1).asInt();
+		cout << "ServerModule: received message of tested number: " << tested_N << endl;
 
-public:
-    double getPeriod()  {        return 1.0;  }
+		//updating CNT and FIFO
+		cout << "ServerModule: updating CNT and FIFO" << endl;
+		CNT++;
+		fifo_mutex.wait();
+		FIFO.push_back(CNT);
 
-    virtual bool respond(const Bottle &command, Bottle &reply)
-  	{
-      return true;
-  	}
+		//choosing an other pair (N,T)
+		cout << "ServerModule: choosing an other pair (N,T).." <<endl;
+		int new_N = CNT;
+		cout << "CNT: " << CNT <<endl;
 
-    virtual bool updateModule()
-  	{
-			int tested_N;
-			cout << "receiving message from client.."<< endl;
-		  server_port.read(in,true);
-			if(in.get(0).asInt()==COLLATZ_VOCAB_ITEM_REQ){
-				tested_N = in.get(1).asInt();
-				cout << "received message from client with N: " << N << endl;
+		std::list<int>::iterator it1 = FIFO.begin();
+		int new_T = ((*it1)-1);
+		cout << "HEAD - 1 : " << new_T <<endl;
 
-				cout  "updating CNT and FIFO" <<endl;
-				CNT++;
-				fifo_mutex.wait();
-				FIFO.push_back(CNT
-
-				cout  "choosing an other pair (N,T).." <<endl;
-				int new_N = CNT;
-				int new_T = ()*(FIFO.begin()))-1;
-
-				cout  "eresing tested number"<< tested_N << "from the FIFO" <<endl;
-				ereseTested(tested_N);
-
-				fifo_mutex.post();
-
-				cout << "prepering bottle for the client.."<< endl;
-				out.addInt(COLLATZ_VOCAB_ITEM);
-				out.addInt(new_N);
-				out.addInt(new_T);
-
-				cout << "sending message to client.."<< endl;
-				server_port.reply(out);
+		//eresing tested number
+		cout << "ServerModule: eresing tested number"<< tested_N << "from the FIFO" <<endl;
+		std::list<int>::iterator it = FIFO.begin();
+		bool found = false;
+		while(!found && it != FIFO.end()){
+			if(*it == tested_N){
+				FIFO.erase(it);
+				found = true;
 			}
-
-			in.clear();
-      out.clear();
-  		return true;
-  	}
-
-
-    bool configure(yarp::os::ResourceFinder &rf)
-    {
-			CNT = 0;
-      string port_name = rf.find("name").asString().c_str();
-
-      server_port.open(("/"+port_name).c_str());
-      cout << "opened port: /" + port_name << endl;
-
-      //attach(server_port);
-      //cout <<"attached port: /"+port_name<< endl;
-
-      return true;
-    }
-
-    bool interruptModule()
-    {
-      server_port.interrupt();
-      return true;
-    }
-
-    bool close()
-    {
-
-      server_port.close();
-
-      return true;
-    }
-
-		void ereseTested(int N){
-			std::list<int>::iterator it = FIFO.begin();
-			bool found = false;
-			while(!found && it != FIFO.end()){
-				if(*it == tested_N){
-					cout << "number"<<*it<< "tested. Eresing.." << endl;
-					FIFO.erase(it);
-					found = true;
-				}
-				it++;
-			}
-			if(!found){
-				cout << "number"<<tested_N<< "Not found in the FIFO..." << endl;
-			}
-
+			it++;
 		}
-};
+		if(!found){
+			cout << "ServerModule: number"<<tested_N<< "Not found in the FIFO..." << endl;
+		}
 
-  int main(int argc, char * argv[])
-  {
-    /* initialize yarp network */
-    Network yarp;
-    /* create your module */
-    ServerModule module;
-    /* prepare and configure the resource finder */
-    ResourceFinder rf;
-    rf.configure(argc, argv);
-    rf.setVerbose(true);
-    cout << "Configuring and starting module. \n";
-    module.runModule(rf);   // This calls configure(rf) and, upon success, the module execution begins with a call to updateModule()
-    cout<<"Main returning..."<<endl;
-    return module.runModule(rf);
-  }
+		fifo_mutex.post();
+
+		//prepering new bottle for the client
+		cout << "ServerModule: prepering bottle for the client.."<< endl;
+		out.addInt(COLLATZ_VOCAB_ITEM);
+		out.addInt(new_N);
+		out.addInt(new_T);
+
+		//sending response to the client
+		cout << "ServerModule: sending message to client.."<< endl;
+		server_port.reply(out);
+	}
+
+	in.clear();
+  out.clear();
+	return true;
+}
+
+
+bool ServerModule::configure(yarp::os::ResourceFinder &rf)
+{
+	CNT = 1;
+  string port_name = rf.find("name").asString().c_str();
+
+  server_port.open(("/"+port_name).c_str());
+  cout << "ServerModule: opened port: /" + port_name << endl;
+
+	FIFO = std::list<int>();
+
+  return true;
+}
+
+
+std::list<int>::iterator ServerModule::getFIFO(){
+	fifo_mutex.wait();
+	std::list<int>::iterator it = FIFO.begin();
+	fifo_mutex.post();
+
+	return it;
+}
+
+
+int main(int argc, char * argv[])
+{
+  Network yarp;
+  ServerModule module;
+  ResourceFinder rf;
+
+  rf.configure(argc, argv);
+  rf.setVerbose(true);
+
+  cout << "ServerModule: Configuring and starting module. \n";
+  module.runModule(rf);
+
+  cout<<"ServerModule: Main returning..."<<endl;
+  return module.runModule(rf);
+}

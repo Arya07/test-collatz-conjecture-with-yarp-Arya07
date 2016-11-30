@@ -10,7 +10,7 @@
 yarp/os/Vocab.h
 -
 
-/home/elisa/assignements/test-collatz-conjecture-with-yarp-Arya07/code/server/src/ServerModule.cpp
+../include/ServerModule.hpp
 iostream
 -
 iomanip
@@ -21,6 +21,8 @@ yarp/os/RFModule.h
 -
 yarp/os/RpcServer.h
 -
+yarp/os/Semaphore.h
+-
 vocabs.hpp
 -
 stdio.h
@@ -28,6 +30,12 @@ stdio.h
 string
 -
 ctime
+-
+list
+-
+
+/home/elisa/assignements/test-collatz-conjecture-with-yarp-Arya07/code/server/src/ServerModule.cpp
+ServerModule.hpp
 -
 
 /usr/local/include/yarp/conf/api.h
@@ -274,6 +282,10 @@ yarp/os/AbstractContactable.h
 cstddef
 -
 yarp/os/ConstString.h
+-
+
+/usr/local/include/yarp/os/Semaphore.h
+yarp/os/api.h
 -
 
 /usr/local/include/yarp/os/Thread.h

@@ -11,6 +11,12 @@ yarp/os/Vocab.h
 -
 
 ../include/CollatzTester.hpp
+stdio.h
+-
+string
+-
+iostream
+-
 
 /home/elisa/assignements/test-collatz-conjecture-with-yarp-Arya07/code/client/src/ClientModule.cpp
 iostream

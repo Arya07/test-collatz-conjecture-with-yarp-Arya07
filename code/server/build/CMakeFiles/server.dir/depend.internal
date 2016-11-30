@@ -3,6 +3,7 @@
 
 CMakeFiles/server.dir/src/ServerModule.cpp.o
  ../../common/vocabs.hpp
+ ../include/ServerModule.hpp
  /home/elisa/assignements/test-collatz-conjecture-with-yarp-Arya07/code/server/src/ServerModule.cpp
  /usr/local/include/yarp/conf/api.h
  /usr/local/include/yarp/conf/numeric.h
@@ -36,6 +37,7 @@ CMakeFiles/server.dir/src/ServerModule.cpp.o
  /usr/local/include/yarp/os/ResourceFinderOptions.h
  /usr/local/include/yarp/os/RpcServer.h
  /usr/local/include/yarp/os/Searchable.h
+ /usr/local/include/yarp/os/Semaphore.h
  /usr/local/include/yarp/os/Thread.h
  /usr/local/include/yarp/os/Type.h
  /usr/local/include/yarp/os/UnbufferedContactable.h
