@@ -64,7 +64,7 @@ public:
 		N = 0;
 		T = 0;
 
-		string port_name = rf.find("name").asString().c_str();
+		string port_name = rf.check("name", Value("client")).asString();
 		client_port.open(("/"+port_name).c_str());
 		cout << "ClientModule: opened port: /" + port_name << endl;
 

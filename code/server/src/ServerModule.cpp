@@ -50,7 +50,7 @@ bool ServerModule::updateModule(){
 bool ServerModule::configure(yarp::os::ResourceFinder &rf){
 	CNT = 1;
 
-	string port_name = rf.find("name").asString().c_str();
+	string port_name = rf.check("name", Value("server")).asString();
 	int ms_period = rf.check("rate", Value(1000)).asInt();
 
 	server_port.open(("/"+port_name).c_str());
