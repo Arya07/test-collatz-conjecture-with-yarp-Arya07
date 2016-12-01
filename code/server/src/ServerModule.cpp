@@ -49,32 +49,32 @@ bool ServerModule::configure(yarp::os::ResourceFinder &rf){
 	CNT = 1;
 	int ms_period = 1000;
 
-  string port_name = rf.find("name").asString().c_str();
+		string port_name = rf.find("name").asString().c_str();
 	ms_period = rf.find("rate").asInt();
 
-  server_port.open(("/"+port_name).c_str());
-  cout << "ServerModule: opened port: /" << port_name << endl;
+		server_port.open(("/"+port_name).c_str());
+		cout << "ServerModule: opened port: /" << port_name << endl;
 	attach(server_port);
 
 	cout << "ServerModule: staring fifo_handler" << endl;
 	fifo_handler = new FIFOHandler(ms_period);
 	fifo_handler->start();
 
-  return true;
+	return true;
 }
 
 int main(int argc, char * argv[])
 {
-  Network yarp;
-  ServerModule module;
-  ResourceFinder rf;
+	Network yarp;
+	ServerModule module;
+	ResourceFinder rf;
 
-  rf.configure(argc, argv);
-  rf.setVerbose(true);
+	rf.configure(argc, argv);
+	rf.setVerbose(true);
 
-  cout << "ServerModule: Configuring and starting module. \n";
-  module.runModule(rf);
+	cout << "ServerModule: Configuring and starting module. \n";
+	module.runModule(rf);
 
-  cout<<"ServerModule: Main returning..."<<endl;
-  return module.runModule(rf);
+	cout<<"ServerModule: Main returning..."<<endl;
+	return module.runModule(rf);
 }

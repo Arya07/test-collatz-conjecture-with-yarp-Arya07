@@ -61,7 +61,6 @@
 
  void FIFOHandler::interrupt(){
    cout << "FIFOHandler: thread interrupted" <<endl;
-
  }
 
  bool FIFOHandler::releaseThread(){

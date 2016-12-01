@@ -25,7 +25,7 @@ private:
 
 	RpcServer        server_port;
 	int              CNT;
-  FIFOHandler 	   *fifo_handler;
+    FIFOHandler 	   *fifo_handler;
 
 public:
 
