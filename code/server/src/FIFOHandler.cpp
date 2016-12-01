@@ -7,10 +7,12 @@
  using namespace std;
  using namespace yarp::os;
 
- void FIFOHandler::initThread(){
+ bool FIFOHandler::threadInit(){
    cout << "FIFOHandler: thread inizialization" << endl;
    FIFO = std::vector<int>();
    fifo_mutex = yarp::os::Semaphore();
+   return true;
+
  }
 
  void FIFOHandler::run(){
@@ -30,13 +32,6 @@
    int head = FIFO.front();
    fifo_mutex.post();
    return head;
- }
-
- vector<int> FIFOHandler::getFIFO(){
-   fifo_mutex.wait();
-   vector<int> copy = FIFO;
-   fifo_mutex.post();
-   return copy;
  }
 
  void FIFOHandler::eraseTested(int tested_N){
@@ -63,7 +58,6 @@
    cout << "FIFOHandler: thread interrupted" <<endl;
  }
 
- bool FIFOHandler::releaseThread(){
+ void FIFOHandler::threadRelease(){
    cout << "FIFOHandler: thread released" <<endl;
-   return true;
  }

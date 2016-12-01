@@ -35,11 +35,18 @@ public:
 
   bool interruptModule(){
     server_port.interrupt();
+	
+	fifo_handler->interrupt();
+
     return true;
   }
 
   bool close(){
     server_port.close();
+
+	fifo_handler->stop();
+	delete fifo_handler;
+
     return true;
   }
 

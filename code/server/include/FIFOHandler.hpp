@@ -25,13 +25,13 @@ public:
 
   FIFOHandler(int ms_period) : RateThread(ms_period){}
 
-  virtual void initThread();
+  virtual bool threadInit();
 
   virtual void run();
 
   virtual void interrupt();
 
-  virtual bool releaseThread();
+  virtual void threadRelease();
 
   int getHead();
 
