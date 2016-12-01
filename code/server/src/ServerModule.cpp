@@ -51,7 +51,7 @@ bool ServerModule::configure(yarp::os::ResourceFinder &rf){
 	CNT = 1;
 
 	string port_name = rf.find("name").asString().c_str();
-	ms_period = rf.check("rate", Value(1000)).asInt();
+	int ms_period = rf.check("rate", Value(1000)).asInt();
 
 	server_port.open(("/"+port_name).c_str());
 	cout << "ServerModule: opened port: /" << port_name << endl;
