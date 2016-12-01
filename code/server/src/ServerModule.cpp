@@ -1,7 +1,7 @@
 /*
- * author: Elisa Maiettini
- * date: 26/11/2016
- */
+* author: Elisa Maiettini
+* date: 26/11/2016
+*/
 #include<ServerModule.hpp>
 
 using namespace std;
@@ -37,6 +37,8 @@ bool ServerModule::respond(const Bottle &command, Bottle &reply){
 		reply.addInt(new_N);
 		reply.addInt(new_T);
 
+	}else{
+		cout << "invalid message received! with identifier: " << command.get(0).asInt() << endl;
 	}
 	return true;
 }
@@ -47,13 +49,12 @@ bool ServerModule::updateModule(){
 
 bool ServerModule::configure(yarp::os::ResourceFinder &rf){
 	CNT = 1;
-	int ms_period = 1000;
 
-		string port_name = rf.find("name").asString().c_str();
-	ms_period = rf.find("rate").asInt();
+	string port_name = rf.find("name").asString().c_str();
+	ms_period = rf.check("rate", Value(1000)).asInt();
 
-		server_port.open(("/"+port_name).c_str());
-		cout << "ServerModule: opened port: /" << port_name << endl;
+	server_port.open(("/"+port_name).c_str());
+	cout << "ServerModule: opened port: /" << port_name << endl;
 	attach(server_port);
 
 	cout << "ServerModule: staring fifo_handler" << endl;
@@ -76,5 +77,5 @@ int main(int argc, char * argv[])
 	module.runModule(rf);
 
 	cout<<"ServerModule: Main returning..."<<endl;
-	return module.runModule(rf);
+	return 0;
 }

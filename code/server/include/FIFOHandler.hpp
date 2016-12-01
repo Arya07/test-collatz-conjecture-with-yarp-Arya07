@@ -1,7 +1,7 @@
 /*
- * author: Elisa Maiettini
- * date: 30/11/2016
- */
+* author: Elisa Maiettini
+* date: 30/11/2016
+*/
 
 #include <yarp/os/RateThread.h>
 #include <yarp/os/Semaphore.h>
@@ -16,29 +16,29 @@ class FIFOHandler : public RateThread{
 
 private:
 
-  Semaphore        fifo_mutex;
-  vector<int>      FIFO;
+    Semaphore        fifo_mutex;
+    vector<int>      FIFO;
 
 public:
 
-  FIFOHandler() : RateThread(10){}
+    FIFOHandler() : RateThread(10){}
 
-  FIFOHandler(int ms_period) : RateThread(ms_period){}
+    FIFOHandler(int ms_period) : RateThread(ms_period){}
 
-  virtual bool threadInit();
+    virtual bool threadInit();
 
-  virtual void run();
+    virtual void run();
 
-  virtual void interrupt();
+    virtual void interrupt();
 
-  virtual void threadRelease();
+    virtual void threadRelease();
 
-  int getHead();
+    int getHead();
 
-  vector<int> getFIFO();
+    vector<int> getFIFO();
 
-  void eraseTested(int N);
+    void eraseTested(int N);
 
-  void pushBack(int N);
+    void pushBack(int N);
 
 };

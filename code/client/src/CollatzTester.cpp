@@ -16,4 +16,4 @@ using namespace std;
             N=3*N+1;
         }
     }
- }
+}
