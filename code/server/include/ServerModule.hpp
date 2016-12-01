@@ -45,7 +45,6 @@ public:
 
   virtual bool respond(const Bottle &command, Bottle &reply);
 
-
   virtual bool updateModule();
 
   bool configure(yarp::os::ResourceFinder &rf);
